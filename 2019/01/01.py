@@ -38,7 +38,7 @@ def _get_fuel_for_mass(mass, recursive=True):
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestFuelCalculation)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
-    if len(result.failures):
+    if result.failures:
         print(f"{len(result.failures)} tests failed!")
     else:
         print(f"All tests passed!")
