@@ -14,11 +14,25 @@ class TestFuelCalculation(unittest.TestCase):
             (100756, 33583),
         ]
         for test in _tests:
+            self.assertEqual(_get_fuel_for_mass(test[0], recursive=False), test[1])
+
+    def test_fuel_recursive(self):
+        _tests = [
+            (14, 2),
+            (1969, 966),
+            (100756, 50346),
+        ]
+        for test in _tests:
             self.assertEqual(_get_fuel_for_mass(test[0]), test[1])
 
 
-def _get_fuel_for_mass(mass):
-    return floor(mass / 3) - 2
+def _get_fuel_for_mass(mass, recursive=True):
+    fuel = floor(mass / 3) - 2
+    if recursive and fuel > 0:
+        fuel_mass = _get_fuel_for_mass(fuel)
+        if fuel_mass > 0:
+            fuel += fuel_mass
+    return fuel
 
 
 if __name__ == '__main__':
