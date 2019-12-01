@@ -43,11 +43,15 @@ if __name__ == '__main__':
     else:
         print(f"All tests passed!")
         input_file = path.join(path.dirname(__file__), "input.txt")
-        total_fuel = 0
+        masses = []
         with open(input_file, 'r') as input:
             mass = input.readline()
             while mass:
-                total_fuel += _get_fuel_for_mass(int(mass))
+                masses.append(int(mass))
                 mass = input.readline()
 
-        print(f"Total mass: {total_fuel}")
+        part_one_solution = sum([_get_fuel_for_mass(mass, recursive=False) for mass in masses])
+        print(f"Part one solution: {part_one_solution}")
+        
+        part_two_solution = sum([_get_fuel_for_mass(mass) for mass in masses])
+        print(f"Part two solution: {part_two_solution}")
