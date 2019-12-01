@@ -1,4 +1,4 @@
-"""Day 1 challenge for Avent of Code 2019 - https://adventofcode.com/2019/day/1"""
+"""Day 1 challenge for Advent of Code 2019 - https://adventofcode.com/2019/day/1"""
 
 from math import floor
 from os import path
