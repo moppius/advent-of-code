@@ -7,22 +7,22 @@ import unittest
 
 class TestFuelCalculation(unittest.TestCase):
     def test_fuel(self):
-        _tests = [
+        tests = [
             (12, 2),
             (14, 2),
             (1969, 654),
             (100756, 33583),
         ]
-        for test in _tests:
+        for test in tests:
             self.assertEqual(_get_fuel_for_mass(test[0], recursive=False), test[1])
 
     def test_fuel_recursive(self):
-        _tests = [
+        tests = [
             (14, 2),
             (1969, 966),
             (100756, 50346),
         ]
-        for test in _tests:
+        for test in tests:
             self.assertEqual(_get_fuel_for_mass(test[0]), test[1])
 
 
