@@ -1,7 +1,7 @@
 """Day 2 challenge for Advent of Code 2019 - https://adventofcode.com/2019/day/2"""
 
 from os import path
-import unittest
+from unittest import TestCase
 
 
 INPUT_FILE = path.join(path.dirname(__file__), "input.txt")
@@ -9,7 +9,7 @@ with open(INPUT_FILE, 'r') as fp:
     OPCODES = [int(op) for op in fp.readline().split(",")]
 
 
-class TestDay2(unittest.TestCase):
+class ChallengeTests(TestCase):
     """Tests for day 2."""
 
     def test_part1(self):
@@ -52,22 +52,17 @@ def _brute_force_find():
     for noun in range(0, 99):
         for verb in range(0, 99):
             if _find_output_from_values(noun, verb)[0] == required_result:
-                print(f"Found required result {required_result} where noun = {noun}, verb = {verb}")
+                #print(f"Found required result {required_result} where noun = {noun}, verb = {verb}")
                 return 100 * noun + verb
     print(f"Error: Failed to find required result: {required_result}")
     return None
 
 
-if __name__ == '__main__':
-    SUITE = unittest.TestLoader().loadTestsFromTestCase(TestDay2)
-    RESULT = unittest.TextTestRunner(verbosity=2).run(SUITE)
-    if RESULT.failures:
-        print(f"{len(RESULT.failures)} tests failed!")
-    else:
-        print(f"All tests passed!")
+def run_challenge():
+    """Run the challenge."""
 
-        PART_ONE_SOLUTION = _find_output_from_values(12, 2)[0]
-        print(f"Day 02: Part one solution: {PART_ONE_SOLUTION}")
+    part_one_solution = _find_output_from_values(12, 2)[0]
+    print(f"\tPart one solution: {part_one_solution}")
 
-        PART_TWO_SOLUTION = _brute_force_find()
-        print(f"Day 02: Part two solution: {PART_TWO_SOLUTION}")
+    part_two_solution = _brute_force_find()
+    print(f"\tPart two solution: {part_two_solution}")

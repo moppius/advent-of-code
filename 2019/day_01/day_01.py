@@ -2,10 +2,10 @@
 
 from math import floor
 from os import path
-import unittest
+from unittest import TestCase
 
 
-class TestFuelCalculation(unittest.TestCase):
+class ChallengeTests(TestCase):
     """Tests for day 1."""
 
     def test_fuel(self):
@@ -39,20 +39,15 @@ def _get_fuel_for_mass(mass, recursive=True):
     return fuel
 
 
-if __name__ == '__main__':
-    SUITE = unittest.TestLoader().loadTestsFromTestCase(TestFuelCalculation)
-    RESULT = unittest.TextTestRunner(verbosity=2).run(SUITE)
-    if RESULT.failures:
-        print(f"{len(RESULT.failures)} tests failed!")
-    else:
-        print(f"All tests passed!")
+def run_challenge():
+    """Run the challenge."""
 
-        INPUT_FILE = path.join(path.dirname(__file__), "input.txt")
-        with open(INPUT_FILE, 'r') as fp:
-            MASSES = [int(mass) for mass in fp]
+    input_file_path = path.join(path.dirname(__file__), "input.txt")
+    with open(input_file_path, 'r') as input_file:
+        masses = [int(mass) for mass in input_file]
 
-        PART_ONE_SOLUTION = sum([_get_fuel_for_mass(mass, recursive=False) for mass in MASSES])
-        print(f"Part one solution: {PART_ONE_SOLUTION}")
+    part_one_solution = sum([_get_fuel_for_mass(mass, recursive=False) for mass in masses])
+    print(f"\tPart one solution: {part_one_solution}")
 
-        PART_TWO_SOLUTION = sum([_get_fuel_for_mass(mass) for mass in MASSES])
-        print(f"Part two solution: {PART_TWO_SOLUTION}")
+    part_two_solution = sum([_get_fuel_for_mass(mass) for mass in masses])
+    print(f"\tPart two solution: {part_two_solution}")
