@@ -6,7 +6,10 @@ import unittest
 
 
 class TestFuelCalculation(unittest.TestCase):
+    """Tests for day 1."""
+
     def test_fuel(self):
+        """Test part one example values."""
         tests = [
             (12, 2),
             (14, 2),
@@ -17,6 +20,7 @@ class TestFuelCalculation(unittest.TestCase):
             self.assertEqual(_get_fuel_for_mass(test[0], recursive=False), test[1])
 
     def test_fuel_recursive(self):
+        """Test part two example values."""
         tests = [
             (14, 2),
             (1969, 966),
@@ -36,17 +40,19 @@ def _get_fuel_for_mass(mass, recursive=True):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestFuelCalculation)
-    result = unittest.TextTestRunner(verbosity=2).run(suite)
-    if result.failures:
-        print(f"{len(result.failures)} tests failed!")
+    SUITE = unittest.TestLoader().loadTestsFromTestCase(TestFuelCalculation)
+    RESULT = unittest.TextTestRunner(verbosity=2).run(SUITE)
+    if RESULT.failures:
+        print(f"{len(RESULT.failures)} tests failed!")
     else:
         print(f"All tests passed!")
-        input_file = path.join(path.dirname(__file__), "input.txt")
-        with open(input_file, 'r') as input: masses = [int(mass) for mass in input]
 
-        part_one_solution = sum([_get_fuel_for_mass(mass, recursive=False) for mass in masses])
-        print(f"Part one solution: {part_one_solution}")
-        
-        part_two_solution = sum([_get_fuel_for_mass(mass) for mass in masses])
-        print(f"Part two solution: {part_two_solution}")
+        INPUT_FILE = path.join(path.dirname(__file__), "input.txt")
+        with open(INPUT_FILE, 'r') as fp:
+            MASSES = [int(mass) for mass in fp]
+
+        PART_ONE_SOLUTION = sum([_get_fuel_for_mass(mass, recursive=False) for mass in MASSES])
+        print(f"Part one solution: {PART_ONE_SOLUTION}")
+
+        PART_TWO_SOLUTION = sum([_get_fuel_for_mass(mass) for mass in MASSES])
+        print(f"Part two solution: {PART_TWO_SOLUTION}")
