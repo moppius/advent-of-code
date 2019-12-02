@@ -15,10 +15,10 @@ def run_challenges():
 
     for obj in listdir(path.dirname(__file__)):
         if obj.startswith("day_"):
-            run_challenge(obj)
+            _run_challenge(obj)
 
 
-def run_challenge(day):
+def _run_challenge(day):
     """Run the challenge for a given day."""
 
     name = f"Day {day.split('_')[1]}"
