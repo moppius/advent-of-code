@@ -23,7 +23,10 @@ def _run_challenge(day):
 
     name = f"Day {day.split('_')[1]}"
     print(f"\n\n{name}")
-    module = import_module(f".{day}.{day}", "2019")
+    if __name__ == "__main__":
+        module = import_module(f"{day}.{day}", ".")
+    else:
+        module = import_module(f".{day}.{day}", "2019")
     method = getattr(module, RUN_METHOD_NAME, None)
     if method is None:
         print(f"Error: {name} has no '{RUN_METHOD_NAME}' method!")
