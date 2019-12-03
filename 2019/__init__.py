@@ -10,12 +10,15 @@ TEST_CLASS_NAME = "ChallengeTests"
 RUN_METHOD_NAME = "run_challenge"
 
 
-def run_challenges():
-    """Run all challenges."""
+def run_challenges(only_latest=True):
+    """Run all challenges if `only_latest` is False, otherwise run the latest day's challenge."""
 
-    for obj in listdir(path.dirname(__file__)):
-        if obj.startswith("day_"):
-            _run_challenge(obj)
+    days = [obj for obj in listdir(path.dirname(__file__)) if obj.startswith("day_")]
+    if only_latest:
+        _run_challenge(days[-1])
+    else:
+        for day in days:
+            _run_challenge(day)
 
 
 def _run_challenge(day):
