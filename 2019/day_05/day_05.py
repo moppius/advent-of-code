@@ -36,8 +36,8 @@ def _get_opcode_result(opcodes, input_val=0):
             op_str = str(opcode)
             modes = [int(op_str[-int(o) - 1]) for o in range(2, len(op_str))]
             opcode = int(op_str[-2:])
-        for m in range(1, 4):
-            if len(modes) < m:
+        for mode in range(1, 4):
+            if len(modes) < mode:
                 modes.append(0)
 
         jump = 2 if opcode in [3, 4] else 4
@@ -51,8 +51,7 @@ def _get_opcode_result(opcodes, input_val=0):
             val_b = result[result[i+2]] if modes[1] == 0 else result[i+2]
             result[result[i+3]] = val_a * val_b
         elif opcode == 3:
-            index = result[i+1]
-            result[index] = input_val
+            result[result[i+1]] = input_val
         elif opcode == 4:
             output_val = result[result[i+1]] if modes[0] == 0 else result[i+1]
         elif opcode == 99:
