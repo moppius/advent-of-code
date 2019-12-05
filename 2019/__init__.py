@@ -50,7 +50,10 @@ def _run_tests(module):
 
     suite = TestLoader().loadTestsFromTestCase(tests)
     result = TextTestRunner(verbosity=0).run(suite)
-    if result.failures:
+    if result.errors:
+        print(f"\tErrors during test run!\n")
+        return False
+    elif result.failures:
         print(f"\tError: {len(result.failures)} tests failed!\n")
         return False
     print("\tAll tests passed!\n")
