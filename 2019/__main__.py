@@ -1,7 +1,8 @@
 """Main entry point for Advent of Code 2019 module."""
 
 
-from . import run_challenges
+import sys
+from . import main
 
 
-run_challenges()
+main(sys.argv[1:])
