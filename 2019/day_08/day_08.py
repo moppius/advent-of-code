@@ -19,6 +19,17 @@ class ChallengeTests(TestCase):
         self.assertEqual(image.layers[0].pixels, test["result"][0])
         self.assertEqual(image.layers[1].pixels, test["result"][1])
 
+    def test_part2(self):
+        """Test part two example values."""
+        test = {
+            "width": 2,
+            "height": 2,
+            "data": "0222112222120000",
+            "result": [[0, 1], [1, 0]],
+        }
+        image = SpaceImage(test["width"], test["height"], test["data"])
+        self.assertEqual(image.flattened(), test["result"])
+
 
 class SpaceImageLayer():
     """Space Image Format Layer."""
@@ -60,6 +71,16 @@ class SpaceImage():
             self.layers.append(layer)
             i += chunk_size
 
+    def flattened(self):
+        """Returns the flattened layer result."""
+        result = self.layers[0].pixels.copy()
+        for layer in self.layers[1:]:
+            for row in range(self.height):
+                for col in range(self.width):
+                    if result[row][col] == 2:
+                        result[row][col] = layer.pixels[row][col]
+        return result
+
     @property
     def layer_with_least_zeroes(self):
         """Returns the `SpaceImageLayer` object with the fewest zero pixels."""
@@ -83,3 +104,10 @@ def run_challenge():
     layer = image.layer_with_least_zeroes
     part_one_solution = layer.count_pixels(1) * layer.count_pixels(2)
     print(f"\tPart one solution: {part_one_solution}")
+    part_two_solution = image.flattened()
+    print(f"\tPart two solution:\n")
+    for row in part_two_solution:
+        row_str = ""
+        for pixel in row:
+            row_str += "|||" if pixel else "   "
+        print(f"\t{row_str}")
