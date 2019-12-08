@@ -9,20 +9,15 @@ class ChallengeTests(TestCase):
 
     def test_part1(self):
         """Test part one example values."""
-
-        tests = [
-            {
-                "width": 3,
-                "height": 2,
-                "data": "123456789012",
-                "result": [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [0, 1, 2]]],
-            },
-        ]
-
-        for test in tests:
-            image = SpaceImage(test["width"], test["height"], test["data"])
-            self.assertEqual(image.layers[0].pixels, test["result"][0])
-            self.assertEqual(image.layers[1].pixels, test["result"][1])
+        test = {
+            "width": 3,
+            "height": 2,
+            "data": "123456789012",
+            "result": [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [0, 1, 2]]],
+        }
+        image = SpaceImage(test["width"], test["height"], test["data"])
+        self.assertEqual(image.layers[0].pixels, test["result"][0])
+        self.assertEqual(image.layers[1].pixels, test["result"][1])
 
 
 class SpaceImageLayer():
