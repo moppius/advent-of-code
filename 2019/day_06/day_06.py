@@ -5,7 +5,7 @@ from unittest import TestCase
 
 
 class ChallengeTests(TestCase):
-    """Tests for day 2."""
+    """Tests for day 6."""
 
     def test_part1(self):
         """Test part one example values."""

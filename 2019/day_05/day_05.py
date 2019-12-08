@@ -10,7 +10,7 @@ with open(INPUT_FILE, 'r') as fp:
 
 
 class ChallengeTests(TestCase):
-    """Tests for day 2."""
+    """Tests for day 5."""
 
     def test_part1(self):
         """Test part one example values."""
