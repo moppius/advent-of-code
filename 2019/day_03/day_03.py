@@ -12,30 +12,34 @@ with open(INPUT_FILE, 'r') as fp:
 class ChallengeTests(TestCase):
     """Tests for day 3."""
 
-    def test_part1(self):
-        """Test part one example values."""
+    def test_part1_and_part2(self):
+        """Test part one and part two example values."""
         tests = [
             ([
                 ["R8", "U5", "L5", "D3"],
                 ["U7", "R6", "D4", "L4"]
-            ], 6),
+            ], 6, 30),
             ([
                 ["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"],
                 ["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"]
-            ], 159),
+            ], 159, 610),
             ([
                 ["R98", "U47", "R26", "D63", "R33", "U87", "L62", "D20", "R33", "U53", "R51"],
                 ["U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7"]
-            ], 135)
+            ], 135, 410)
         ]
         for test in tests:
-            self.assertEqual(WireIntersector(test[0]).get_nearest_result(), test[1])
+            manhattan_distance, best_step = WireIntersector(test[0]).get_nearest_result()
+            self.assertEqual(manhattan_distance, test[1])
+            self.assertEqual(best_step, test[2])
 
 
 class WireSection():
     """Class that represents a section of wire."""
 
     def __init__(self, start, direction, length):
+        self.direction = direction
+        self.length = length
         self.start = start.copy()
         if direction == "U":
             start[1] += length
@@ -66,7 +70,7 @@ class WireIntersector():
 
     @staticmethod
     def _process_wire(wire):
-        result = {"horizontal": [], "vertical": []}
+        result = []
         start = [0, 0]
         for section in wire:
             direction = section[0]
@@ -74,26 +78,69 @@ class WireIntersector():
                 print(f"Error: Invalid direction '{direction}'")
                 return None
             length = int(section[1:])
-            angle = "vertical" if direction in ["U", "D"] else "horizontal"
-            result[angle].append(WireSection(start, direction, length))
+            result.append(WireSection(start, direction, length))
+        return result
+
+    @staticmethod
+    def _get_best_step(wire1, wire2, crossing):
+        result = 0
+        for wire in [wire1, wire2]:
+            for section in wire:
+                crosses_horizontally = (
+                    section.start[0] == section.end[0]
+                    and section.start[0] == crossing[0]
+                    and crossing[1] in range(section.start[1], section.end[1])
+                )
+                crosses_vertically = (
+                    section.start[1] == section.end[1]
+                    and section.start[1] == crossing[1]
+                    and crossing[0] in range(section.start[0], section.end[0])
+                )
+                if crosses_horizontally:
+                    if section.direction == "U":
+                        result += abs(crossing[1] - section.start[1])
+                    else:
+                        result += abs(section.end[1] - crossing[1])
+                    break
+                elif crosses_vertically:
+                    if section.direction == "R":
+                        result += abs(crossing[0] - section.start[0])
+                    else:
+                        result += abs(section.end[0] - crossing[0])
+                    break
+                result += section.length
         return result
 
     def get_nearest_result(self):
         """Return the nearest crossing result's Manhattan distance from center."""
         crossings = []
-        for wires in [(self.wire1, self.wire2), (self.wire2, self.wire1)]:
-            for horizontal in wires[0]["horizontal"]:
-                for vertical in wires[1]["vertical"]:
-                    test1 = vertical.start[0] > horizontal.start[0] and vertical.end[0] < horizontal.end[0]
-                    test2 = vertical.start[1] < horizontal.start[1] and vertical.end[1] > horizontal.start[1]
-                    if test1 and test2:
-                        crossings.append([abs(vertical.start[0]), abs(horizontal.start[1])])
-        shortest = None
+        best_step = None
+        for wire1_section in self.wire1:
+            for wire2_section in self.wire2:
+                test1 = wire1_section.start[0] > wire2_section.start[0] and wire1_section.end[0] < wire2_section.end[0]
+                test2 = wire1_section.start[1] < wire2_section.start[1] and wire1_section.end[1] > wire2_section.start[1]
+                if test1 and test2:
+                    crossing = [wire1_section.start[0], wire2_section.start[1]]
+                    crossings.append(crossing)
+                    this_step = self._get_best_step(self.wire1, self.wire2, crossing)
+                    if best_step is None or this_step < best_step:
+                        best_step = this_step
+
+                test3 = wire2_section.start[0] > wire1_section.start[0] and wire2_section.end[0] < wire1_section.end[0]
+                test4 = wire2_section.start[1] < wire1_section.start[1] and wire2_section.end[1] > wire1_section.start[1]
+                if test3 and test4:
+                    crossing = [wire2_section.start[0], wire1_section.start[1]]
+                    crossings.append(crossing)
+                    this_step = self._get_best_step(self.wire2, self.wire1, crossing)
+                    if best_step is None or this_step < best_step:
+                        best_step = this_step
+
+        manhattan_distance = None
         for crossing in crossings:
-            distance = crossing[0] + crossing[1]
-            if shortest is None or distance < shortest:
-                shortest = distance
-        return shortest
+            distance = abs(crossing[0]) + abs(crossing[1])
+            if manhattan_distance is None or distance < manhattan_distance:
+                manhattan_distance = distance
+        return manhattan_distance, best_step
 
 
 def run_challenge():
