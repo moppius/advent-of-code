@@ -23,23 +23,58 @@ class ChallengeTests(TestCase):
     def test_part_1(self):
         self.assertEqual(_solve_power_consumption(self.test_input), 198)
 
+    def test_part_2(self):
+        self.assertEqual(_solve_life_support(self.test_input), 230)
 
-def _solve_power_consumption(input_values):
+
+def _count_ones(input_values):
     length = len(input_values[0])
     count_ones = [0 for _ in range(length)]
-    print(count_ones)
     for val in input_values:
         for i in range(length):
             if val[i] == "1":
                 count_ones[i] += 1
+    return count_ones
 
+
+def _solve_power_consumption(input_values):
+    count_ones = _count_ones(input_values)
     half_total = len(input_values) / 2
     gamma_rate = ""
     epsilon_rate = ""
+    length = len(input_values[0])
     for i in range(length):
         gamma_rate += "0" if count_ones[i] >= half_total else "1"
         epsilon_rate += "0" if count_ones[i] < half_total else "1"
+
     return int(gamma_rate, 2) * int(epsilon_rate, 2)
+
+
+def _filter_list(input_values, most_common=True):
+    filtered_list = []
+    filtered_list.extend(input_values)
+    length = len(filtered_list[0])
+    for i in range(length):
+        half_total = len(filtered_list) / 2
+        count_ones = _count_ones(filtered_list)
+        keep_val = "1" if count_ones[i] >= half_total else "0"
+        if not most_common:
+            keep_val = "1" if count_ones[i] < half_total else "0"
+        start = len(filtered_list) - 1
+        for k in range(start, -1, -1):
+            if len(filtered_list) == 1:
+                break
+            if filtered_list[k][i] != keep_val:
+                filtered_list.pop(k)
+        if len(filtered_list) == 1:
+            break
+    return int(filtered_list[0], 2)
+
+
+def _solve_life_support(input_values):
+    oxygen_generator = _filter_list(input_values, most_common=True)
+    co2_scrubber = _filter_list(input_values, most_common=False)
+    return oxygen_generator * co2_scrubber
 
 
 def run_challenge():
@@ -49,3 +84,6 @@ def run_challenge():
 
     part_one_solution = _solve_power_consumption(input_values)
     print(f"\tPart one solution: {part_one_solution}")
+
+    part_two_solution = _solve_life_support(input_values)
+    print(f"\tPart two solution: {part_two_solution}")
