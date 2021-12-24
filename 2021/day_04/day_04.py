@@ -30,6 +30,9 @@ class ChallengeTests(TestCase):
     def test_part_1(self):
         self.assertEqual(_solve_bingo(self._test_input), 4512)
 
+    def test_part_2(self):
+        self.assertEqual(_solve_bingo_lowest(self._test_input), 1924)
+
 
 class BingoCard():
     def __init__(self, string):
@@ -99,6 +102,30 @@ def _solve_bingo(input_string):
         return last_number * winning_card.sum_of_unmarked_numbers
 
 
+def _solve_bingo_lowest(input_string):
+    strings = input_string.split("\n\n")
+    numbers = [int(val) for val in strings.pop(0).strip().split(",")]
+    bingo_cards = [BingoCard(string) for string in strings]
+    winning_cards = []
+    last_number = None
+    for number in numbers:
+        if not bingo_cards:
+            break
+        last_number = number
+        start = len(bingo_cards)
+        for i in range(start, 0, -1):
+            if bingo_cards[i - 1].check_number(number):
+                winning_cards.append(bingo_cards.pop(i - 1))
+            if not bingo_cards:
+                break
+
+    if bingo_cards:
+        print("Failed to find a lowest scoring bingo card!")
+        return 0
+    else:
+        return last_number * winning_cards[-1].sum_of_unmarked_numbers
+
+
 def run_challenge():
     input_file_path = path.join(path.dirname(__file__), "input.txt")
     with open(input_file_path, 'r') as input_file:
@@ -106,3 +133,6 @@ def run_challenge():
 
     part_one_solution = _solve_bingo(input_values)
     print(f"\tPart one solution: {part_one_solution}")
+
+    part_two_solution = _solve_bingo_lowest(input_values)
+    print(f"\tPart two solution: {part_two_solution}")
